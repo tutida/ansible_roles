@@ -1,0 +1,31 @@
+---
+# remiのリポジトリをインストール
+- name: install remi repository
+  yum: name=http://rpms.famillecollet.com/enterprise/remi-release-6.rpm state=present
+# php70のインストール
+- name: install php70
+  yum: name={{ item }} enablerepo=remi-php70 state=present
+  with_items:
+  - php
+  - php-pear
+  - php-devel
+  - php-xml
+  - php-mbstring
+  - php-gd
+  - php-pgsql
+  - php-mysqlnd
+  - php-mcrypt
+  - php-intl
+  - php-opcache
+  - php-pdo
+  - php-pecl-xdebug
+  - php-json
+# ここから https://gist.github.com/debility/8838906 を反映
+- name: config PHP
+  copy: src=99-my.ini dest=/etc/php.d/99-my.ini
+# ここまで https://gist.github.com/debility/8838906 を反映
+- name: config OPCache
+  lineinfile: dest=/etc/php.d/10-opcache.ini regexp="opcache\.enable_cli=" line="opcache.enable_cli=1"
+# ログイン時に有効化する
+- name: restart httpd
+  service: name=httpd state=restarted

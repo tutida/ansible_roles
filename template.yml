@@ -1,0 +1,15 @@
+---
+- name: {{ name }}
+  hosts: all
+  sudo: true
+  vars:
+    hostname: {{ var:hostname }}
+    # for git role
+    username: {{ user }}
+    email   : {{ email }}
+    # for common/apache role
+    allow_ip: {{ ipaddress }}/255.255.255.0
+    mainuser: {{ mainuser }}
+    main_password: {{ main_password }}
+  roles:
+    - {{ roles }}

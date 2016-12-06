@@ -1,0 +1,40 @@
+//MySQLのパスワード周りの設定
+
+# mysql_secure_installation
+
+// 起動したてでrootパスワードが設定されていないので、そのまま「Enter」。
+Enter current password for root (enter for none):
+// Rootパスワードを設定するので「Y」
+Set root password? [Y/n] Y
+// 誰でもログインできる状態になっているのでそれをRemoveするので「Y」。
+Remove anonymous users? [Y/n] Y
+// RootでMySQLにリモートログインできるのはセキュリティ的にNGなので「Y」。
+Disallow root login remotely? [Y/n] Y
+// testデータベースは不要のため「Y」。
+Remove test database and access to it? [Y/n] Y
+// 上記設定による権限の変更等を即時反映したいので「Y」。
+Reload privilege tables now? [Y/n] Y
+
+
+//MySQLでのユーザ追加設定
+
+# rootユーザーでmysqlコマンドの実行
+# mysql -u root -p
+
+# 現在のユーザーの一覧表示
+mysql> select Host, User, Password from mysql.user;
+
+# ユーザーの追加
+mysql> create user
+   -> 'mysql'@'localhost' identified by 'mysql',
+   -> 'mysql'@'127.0.0.1' identified by 'mysql';
+
+//ネットワーク設定
+# # rootユーザのパスワード初期化
+# - name: cofig root password
+#   command: /usr/bin/mysqladmin password root -u root -p
+#   when: result|failed
+# # ネットワークのアクセス制限を設定する
+# - name: cnfig permit network
+#   command: /usr/bin/mysql -uroot -proot password -e "grant all privileges on *.* to root@\"{{ permit_network }}\" identified by 'root' with grant option; flush privileges;" mysql
+#   when: result|failed

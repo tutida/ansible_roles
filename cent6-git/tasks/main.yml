@@ -1,0 +1,57 @@
+---
+# gitをインストール
+- name: install httpd
+  yum: name={{ item }} state=present
+  with_items:
+    - git
+
+# gitのユーザ名とemailを設定
+- name: setting username
+  command: git config --global user.name {{ username }}
+- name: setting email
+  command: git config --global user.email {{ email}}
+
+# gitのカラーリング
+- name: setting color
+  command: git config --global color.ui auto
+
+# gitの補完機能有効
+- name: settin git snipet
+  shell: cd ~/
+  become: yes
+  become_user: {{ username }}
+
+- name: settin git snipet1
+  shell: echo "#For Git" >> ~/.bashrc
+  become: yes
+  become_user: {{ username }}
+
+- name: settin git snipet2
+  get_url: url="https://raw.github.com/git/git/master/contrib/completion/git-prompt.sh" dest=~/
+  become: yes
+  become_user: {{ username }}
+
+- name: settin git snipet3
+  shell: echo source ~/git-prompt.sh >> ~/.bashrc
+  become: yes
+  become_user: {{ username }}
+
+- name: settin git snipet4
+  get_url: url="https://raw.github.com/git/git/master/contrib/completion/git-completion.bash" dest=~/
+  become: yes
+  become_user: {{ username }}
+
+- name: settin git snipet5
+  shell: echo source ~/git-completion.bash >> ~/.bashrc
+  become: yes
+  become_user: {{ username }}
+
+- name: settin git snipet6
+  shell: echo "PS1=\"\h@\u:\W\\\$(__git_ps1) \\$ \"" >> ~/.bashrc
+  become: yes
+  become_user: {{ username }}
+
+- name: settin git snipet7
+  shell: source ~/.bashrc -m
+  become: yes
+  become_user: {{ username }}
